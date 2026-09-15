@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: safar-posthive-api
+    env: node
+    plan: free
+    rootDir: apps/api
+    buildCommand: "cd ../.. && pnpm install --frozen-lockfile --filter api... && pnpm --filter api exec prisma generate && pnpm --filter api build"
+    startCommand: "npx prisma migrate deploy && node dist/index.js"
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: ENCRYPTION_KEY
+        sync: false
+      - key: WEB_URL
+        sync: false
+      - key: PUBLIC_API_URL
+        sync: false
+      - key: PORT
+        value: 10000
+      - key: AUTH_PROVIDER
+        value: local
+      - key: SECURE_COOKIES
+        value: "true"
+      - key: NODE_OPTIONS
+        value: "--max-old-space-size=400"
