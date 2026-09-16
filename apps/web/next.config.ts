@@ -28,7 +28,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${process.env.BACKEND_URL || 'http://localhost:3001'}/:path*`,
+        destination: `https://safar-posthive-api.onrender.com/:path*`,
       },
     ];
   },
