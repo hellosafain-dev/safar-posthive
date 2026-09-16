@@ -1,4 +1,4 @@
-﻿import { randomBytes, createHash } from "crypto";
+import { randomBytes, createHash } from "crypto";
 import type { FastifyInstance } from "fastify";
 import { TwitterApi } from "twitter-api-v2";
 import { encrypt } from "../lib/encryption.js";
@@ -25,25 +25,25 @@ async function getUserWorkspaceId(userId: string): Promise<string | null> {
   return u?.activeWorkspaceId ?? u?.workspaceMembers?.[0]?.workspaceId ?? null;
 }
 
-const APP_ID = process.env.THREADS_APP_ID!;
-const APP_SECRET = process.env.THREADS_APP_SECRET!;
-const REDIRECT_URI = process.env.THREADS_REDIRECT_URI!;
+const APP_ID = process.env.THREADS_APP_ID ?? "";
+const APP_SECRET = process.env.THREADS_APP_SECRET ?? "";
+const REDIRECT_URI = process.env.THREADS_REDIRECT_URI ?? "";
 const WEB_URL = process.env.WEB_URL ?? "http://localhost:3000";
 
-const IG_APP_ID = process.env.INSTAGRAM_APP_ID!.trim();
-const IG_APP_SECRET = process.env.INSTAGRAM_APP_SECRET!.trim();
-const IG_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI!;
+const IG_APP_ID = process.env.INSTAGRAM_APP_ID?.trim() ?? "";
+const IG_APP_SECRET = process.env.INSTAGRAM_APP_SECRET?.trim() ?? "";
+const IG_REDIRECT_URI = process.env.INSTAGRAM_REDIRECT_URI ?? "";
 
-const LI_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID!;
-const LI_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET!;
-const LI_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI!;
+const LI_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID ?? "";
+const LI_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET ?? "";
+const LI_REDIRECT_URI = process.env.LINKEDIN_REDIRECT_URI ?? "";
 
-const MASTO_CLIENT_ID = process.env.MASTODON_CLIENT_ID!;
-const MASTO_CLIENT_SECRET = process.env.MASTODON_CLIENT_SECRET!;
-const MASTO_REDIRECT_URI = process.env.MASTODON_REDIRECT_URI!;
+const MASTO_CLIENT_ID = process.env.MASTODON_CLIENT_ID ?? "";
+const MASTO_CLIENT_SECRET = process.env.MASTODON_CLIENT_SECRET ?? "";
+const MASTO_REDIRECT_URI = process.env.MASTODON_REDIRECT_URI ?? "";
 const MASTODON_SCOPES = "read:accounts write:statuses write:media";
 
-const PF_REDIRECT_URI = process.env.PIXELFED_REDIRECT_URI!;
+const PF_REDIRECT_URI = process.env.PIXELFED_REDIRECT_URI ?? "";
 const PIXELFED_SCOPES = "read write";
 
 // Server-side store for Pixelfed dynamic client credentials (keyed by nonce)
@@ -51,22 +51,22 @@ const PIXELFED_SCOPES = "read write";
 const pixelfedClientStore = new Map<string, { clientId: string; clientSecret: string }>();
 
 
-const YT_CLIENT_ID = process.env.YOUTUBE_CLIENT_ID!;
-const YT_CLIENT_SECRET = process.env.YOUTUBE_CLIENT_SECRET!;
-const YT_REDIRECT_URI = process.env.YOUTUBE_REDIRECT_URI!;
+const YT_CLIENT_ID = process.env.YOUTUBE_CLIENT_ID ?? "";
+const YT_CLIENT_SECRET = process.env.YOUTUBE_CLIENT_SECRET ?? "";
+const YT_REDIRECT_URI = process.env.YOUTUBE_REDIRECT_URI ?? "";
 
-const FB_APP_ID = process.env.FACEBOOK_APP_ID!;
-const FB_APP_SECRET = process.env.FACEBOOK_APP_SECRET!;
-const FB_REDIRECT_URI = process.env.FACEBOOK_REDIRECT_URI!;
+const FB_APP_ID = process.env.FACEBOOK_APP_ID ?? "";
+const FB_APP_SECRET = process.env.FACEBOOK_APP_SECRET ?? "";
+const FB_REDIRECT_URI = process.env.FACEBOOK_REDIRECT_URI ?? "";
 const FB_SCOPES = "pages_manage_posts,pages_show_list,pages_read_engagement,pages_manage_engagement,pages_read_user_content";
 
-const X_API_KEY     = process.env.X_API_KEY!;
-const X_API_SECRET  = process.env.X_API_SECRET!;
-const X_CALLBACK_URL = process.env.X_CALLBACK_URL!;
+const X_API_KEY     = process.env.X_API_KEY ?? "";
+const X_API_SECRET  = process.env.X_API_SECRET ?? "";
+const X_CALLBACK_URL = process.env.X_CALLBACK_URL ?? "";
 
-const PIN_CLIENT_ID     = process.env.PINTEREST_CLIENT_ID!;
-const PIN_CLIENT_SECRET = process.env.PINTEREST_CLIENT_SECRET!;
-const PIN_REDIRECT_URI  = process.env.PINTEREST_REDIRECT_URI!;
+const PIN_CLIENT_ID     = process.env.PINTEREST_CLIENT_ID ?? "";
+const PIN_CLIENT_SECRET = process.env.PINTEREST_CLIENT_SECRET ?? "";
+const PIN_REDIRECT_URI  = process.env.PINTEREST_REDIRECT_URI ?? "";
 const PIN_SCOPES        = "boards:read,boards:write,pins:read,pins:write,user_accounts:read";
 const YOUTUBE_SCOPES = [
   "https://www.googleapis.com/auth/youtube.upload",
@@ -90,15 +90,15 @@ const GOOGLE_SIGNIN_REDIRECT_URI  = process.env.GOOGLE_REDIRECT_URI ?? "http://l
 // Keyed by nonce; TTL 10 min. Single-instance only — use Redis for multi-instance.
 const googlePkceStore = new Map<string, { codeVerifier: string; returnTo: string; expiresAt: number }>();
 
-const DC_CLIENT_ID     = process.env.DISCORD_CLIENT_ID!;
-const DC_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET!;
-const DC_REDIRECT_URI  = process.env.DISCORD_REDIRECT_URI!;
+const DC_CLIENT_ID     = process.env.DISCORD_CLIENT_ID ?? "";
+const DC_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET ?? "";
+const DC_REDIRECT_URI  = process.env.DISCORD_REDIRECT_URI ?? "";
 
-const TUMBLR_REDIRECT_URI = process.env.TUMBLR_REDIRECT_URI!;
+const TUMBLR_REDIRECT_URI = process.env.TUMBLR_REDIRECT_URI ?? "";
 
-const TK_CLIENT_KEY    = process.env.TIKTOK_CLIENT_KEY!;
-const TK_CLIENT_SECRET = process.env.TIKTOK_CLIENT_SECRET!;
-const TK_REDIRECT_URI  = process.env.TIKTOK_REDIRECT_URI!;
+const TK_CLIENT_KEY    = process.env.TIKTOK_CLIENT_KEY ?? "";
+const TK_CLIENT_SECRET = process.env.TIKTOK_CLIENT_SECRET ?? "";
+const TK_REDIRECT_URI  = process.env.TIKTOK_REDIRECT_URI ?? "";
 const TK_SCOPES        = "user.info.basic,video.upload,video.publish";
 // bot permissions: VIEW_CHANNEL(1024) + SEND_MESSAGES(2048) + ATTACH_FILES(32768) + READ_MESSAGE_HISTORY(65536) + MANAGE_WEBHOOKS(536870912)
 const DC_PERMISSIONS   = "536972288";
