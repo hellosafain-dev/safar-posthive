@@ -8,7 +8,7 @@ const REFRESH_COOKIE = "ss-refresh-token";
 
 export const COOKIE_OPTS = {
   httpOnly: true,
-  sameSite: "lax" as const,
+  sameSite: (process.env.NODE_ENV === "production" ? "none" : "lax") as "none" | "lax",
   secure: process.env.NODE_ENV === "production" || process.env.SECURE_COOKIES === "true",
   path: "/",
 };
