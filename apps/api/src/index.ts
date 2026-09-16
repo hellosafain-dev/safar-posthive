@@ -83,13 +83,14 @@ async function main() {
   const allowedOrigins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    process.env.WEB_URL,
+    process.env.WEB_URL ? process.env.WEB_URL.replace(/\/$/, "") : undefined,
   ].filter(Boolean) as string[];
 
   await app.register(cors, {
     origin: (origin, cb) => {
       if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-      cb(new Error("Not allowed by CORS"), false);
+      console.error(`CORS BLOCKED: Received origin '${origin}' but allowed origins are:`, allowedOrigins);
+      cb(new Error(`Not allowed by CORS: ${origin}`), false);
     },
     credentials: true,
   });
