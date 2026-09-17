@@ -3,7 +3,7 @@
 // Conversion events: logged-in users only, key actions
 
 const ENABLED = process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true";
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+const API = process.env.NODE_ENV === "production" ? "/api" : (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001");
 
 // ── Visitor ID ────────────────────────────────────────────────────────────────
 
